@@ -7,6 +7,8 @@ const { Pool } = require('pg');
 const login = require('./users/login');
 const verify = require('./users/verify')
 const farmer = require('./users/farmersAuth')
+const farmersDashboard = require('./routes/farmersDashboard');
+const message = require('./message/chat')
 
 const app = express();
 const pool = require('./db');
@@ -18,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/users', login);
 app.use('/auth', verify); 
 app.use('/farmers', farmer)
+app.use('/farmer', farmersDashboard);
+app.use('/chat',message);
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
