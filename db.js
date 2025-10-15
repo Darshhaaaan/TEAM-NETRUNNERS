@@ -16,4 +16,9 @@ pool.connect()
   .then(() => console.log("PostgreSQL connected"))
   .catch(err => console.error("PostgreSQL connection error", err));
 
+  pool.query('SELECT NOW()', (err, res) => {
+  if (err) console.error("Test query failed", err);
+  else console.log("Database connected:", res.rows[0]);
+});
+
 module.exports = pool;

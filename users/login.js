@@ -15,7 +15,7 @@ router.post('/register', (req,res) => {
     const {name, userEmail, phone, password} = req.body;
     
     //write frontend for this
-    if(!name && !userEmail && !phone && !password) return res.status(400).json({error: "name or email or password is empty"})
+    if(!name || !userEmail || !phone || !password) return res.status(400).json({error: "name or email or password is empty"})
 
     const email = userEmail.trim().toLowerCase();
 
@@ -29,16 +29,16 @@ router.post('/register', (req,res) => {
                     return res.status(400).json({error: "Email already exists"})
                 }
 
-                if(user.phone === phone) {
+                if(user.number === phone) {
                     return res.status(400).json({error: "Username already exists"})
                 }
             }
         }
         crypt.hash(password, 10, (err, hashedPass) => {
-            if(err) return res.status(500).json({error: "Server error, hashing password"});
+
             
             pool.query('INSERT INTO users (name, email, number, passhash) VALUES ($1, $2, $3, $4)', [name, email, phone, hashedPass], async (err, results) => {
-             if(err) return res.status(500).json({error: "Error creating user"});
+             if(err) return res.status(500).json({error: "Database error"});
 
              const sign = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: '30m'});
              const link = `http://localhost:5000/auth/verify?sign=${sign}`;
@@ -65,7 +65,7 @@ router.post('/login', (req, res) => {
     if (!phoneOremail) {
         return res.status(400).json({ error: "phone/email is empty" });
     }
-
+//1234567890
     if (!password) {
         return res.status(400).json({ error: "Password is empty" });
     }

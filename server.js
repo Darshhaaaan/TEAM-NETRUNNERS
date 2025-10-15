@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { Pool } = require('pg');
 const login = require('./users/login');
 const verify = require('./users/verify')
+const farmer = require('./users/farmersAuth')
 
 const app = express();
 const pool = require('./db');
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/users', login);
 app.use('/auth', verify); 
+app.use('/farmers', farmer)
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
